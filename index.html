@@ -186,7 +186,7 @@
     <div class="hero-inner">
       <div class="kicker">Business stuck in the 90's?<br>Let us bring you into the future, today.</div>
 
-      <p class="typed"><span id="typedText"></span><span class="caret" id="caret" hidden></span></p>
+      <p class="typed"><span id="typedText"></span></p>
 
       <div class="pills" id="pills">
         <a href="#websites" class="pill">Build me a website</a>
@@ -218,33 +218,16 @@
   var reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Typewriter ----
+  // ---- Intro copy (rendered statically, no typewriter) ----
   var fullText = "Your business runs on systems. Most of them are ten years old.\n\n" +
     "We build AI-powered websites, CRMs, and workflows for Toronto businesses that are " +
     "done waiting for “someday.” Real automation, working in weeks, not another " +
     "software subscription you’ll abandon by March.";
 
-  var typedEl = document.getElementById('typedText');
-  var caret = document.getElementById('caret');
+  document.getElementById('typedText').textContent = fullText;
 
-  if (reduceMotion) {
-    typedEl.textContent = fullText;
-  } else {
-    setTimeout(function () {
-      caret.hidden = false;
-      var i = 0;
-      var iv = setInterval(function () {
-        i++;
-        typedEl.textContent = fullText.slice(0, i);
-        if (i >= fullText.length) { clearInterval(iv); caret.hidden = true; }
-      }, 38);
-    }, 600);
-  }
-
-  // ---- Pills entrance ----
-  setTimeout(function () {
-    document.getElementById('pills').classList.add('show');
-  }, reduceMotion ? 0 : 400);
+  // ---- Pills shown immediately ----
+  document.getElementById('pills').classList.add('show');
 
   // ---- Copy email ----
   var copyBtn = document.getElementById('copyBtn');
