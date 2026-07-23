@@ -85,6 +85,7 @@
     margin: 0 0 24px;
     font-size: clamp(28px, 4vw, 48px); line-height: 1.05;
     letter-spacing: -0.02em; color: #1a1a1a; font-weight: 500;
+    text-shadow: 0 2px 28px rgba(243, 244, 237, 0.95), 0 0 12px rgba(243, 244, 237, 0.9);
     transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
     opacity: 0; transform: scale(0.95);
   }
@@ -93,9 +94,21 @@
   .content .sub {
     margin: 22px auto 0; max-width: 520px;
     font-size: clamp(15px, 1.4vw, 17px);
-    color: rgba(26, 26, 26, 0.75); line-height: 1.6;
+    color: rgba(26, 26, 26, 0.82); line-height: 1.6;
+    text-shadow: 0 2px 16px rgba(243, 244, 237, 0.98), 0 1px 5px rgba(243, 244, 237, 0.95);
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) .3s, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) .3s;
     opacity: 0; transform: translateY(20px);
+  }
+
+  /* Soft wash over the top of the video so headline/subtext read as
+     floating on background, not on the phone, at any viewport height. */
+  .top-scrim {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 56vh; z-index: 5; pointer-events: none;
+    background: linear-gradient(to bottom,
+      rgba(243, 244, 237, 0.94) 0%,
+      rgba(243, 244, 237, 0.72) 45%,
+      rgba(243, 244, 237, 0) 100%);
   }
   .content .sub.entered { opacity: 1; transform: translateY(0); }
 
@@ -115,8 +128,17 @@
     animation: blink 0.8s linear infinite;
   }
 
+  /* Short / letterboxed viewports: the centered phone fills the height,
+     so lift and tighten the copy to keep it clear of the handset. */
+  @media (max-height: 640px) {
+    .content { padding-top: 104px; }
+    .content h1 { font-size: clamp(21px, 3vw, 32px); margin-bottom: 10px; }
+    .content .sub { font-size: 13.5px; margin-top: 10px; max-width: 480px; }
+    .top-scrim { height: 48vh; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .content h1, .subwrap p { transition: none; }
+    .content h1, .content .sub { transition: none; }
     .pager-msg .cursor { animation: none; }
   }
 </style>
@@ -146,6 +168,7 @@
     src="videos/pricing.mp4"
     preload="auto" muted playsinline loop></video>
   <div class="video-tint"></div>
+  <div class="top-scrim"></div>
 
   <div class="content">
     <h1 id="headline">Expecting an<br>iPhone 17 Pro invoice?<br>Think again.</h1>
