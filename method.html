@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method — TBD.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --cyan: #46E0FF; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: #000;
+    font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #fff; text-decoration: none; }
+  a:hover { opacity: 0.8; }
+
+  .stage {
+    position: relative; min-height: 100vh;
+    background: #000; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .bg-video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: translateY(17%);
+    opacity: 0;
+  }
+
+  /* ---- Nav ---- */
+  .nav-outer { position: relative; z-index: 20; padding: 24px; }
+  nav.pill {
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-radius: 9999px;
+    background: rgba(8, 12, 20, 0.55);
+    border: 1px solid rgba(70, 224, 255, 0.28);
+    box-shadow: 0 0 28px rgba(70, 224, 255, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 24px; width: 95%; max-width: 1024px; margin: 0 auto;
+  }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand .spark {
+    font-size: 20px; color: var(--cyan);
+    text-shadow: 0 0 10px rgba(70, 224, 255, 0.9); user-select: none; line-height: 1;
+  }
+  .brand .name { font-family: 'Orbitron', sans-serif; font-size: 18px; color: #fff; letter-spacing: 0.1em; }
+  .nav-links { display: flex; align-items: center; gap: 40px; }
+  .nav-links a {
+    font-size: 12px; color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    transition: color .2s, text-shadow .2s;
+  }
+  .nav-links a:hover { color: #fff; text-shadow: 0 0 12px rgba(70, 224, 255, 0.8); opacity: 1; }
+  .btn-get {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #0871E7, #00C6FF);
+    color: #fff; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 10px 26px; border-radius: 9999px;
+    box-shadow: 0 0 18px rgba(0, 198, 255, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  }
+  .btn-get .gloss {
+    position: absolute; width: 80%; height: 16px; left: 10%; top: 1px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55), transparent);
+    border-radius: 12px;
+  }
+  .btn-get .label { position: relative; }
+
+  /* ---- Center content ---- */
+  .content {
+    position: relative; z-index: 10; flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-start; text-align: center;
+    padding: 32px 24px 48px;
+  }
+  .content h1 {
+    margin: 0 0 16px; color: #fff;
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: -0.02em; font-weight: 400;
+    white-space: nowrap;
+  }
+  .content p {
+    margin: 0 0 32px; color: rgba(255, 255, 255, 0.85);
+    font-size: 15px; line-height: 1.7; max-width: 560px; padding: 0 16px;
+  }
+  .ghost-btn {
+    color: #fff; font-size: 14px; font-weight: 500;
+    border-radius: 9999px; padding: 12px 32px;
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(4px);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    position: relative; transition: background .2s;
+  }
+  .ghost-btn::before {
+    content: ''; position: absolute; inset: 0;
+    border-radius: inherit; padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+      rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+      rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none;
+  }
+  .ghost-btn:hover { background: rgba(255, 255, 255, 0.05); opacity: 1; }
+
+  @media (max-width: 600px) {
+    .content h1 { white-space: normal; }
+  }
+</style>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="stage">
+  <video class="bg-video" id="bgVideo"
+    src="videos/method.mp4"
+    preload="auto" muted playsinline></video>
+
+  <div class="nav-outer">
+    <nav class="pill">
+      <div class="brand">
+        <span class="spark">&#10035;&#65038;</span>
+        <a class="name" href="index.html" id="brandName">TBD.ai</a>
+      </div>
+      <div class="nav-links">
+        <a href="capabilities.html">Capabilities</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <a class="btn-get" href="contact.html">
+        <span class="gloss"></span>
+        <span class="label">Get in touch</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="content">
+    <h1>We meet. We build. You move on.</h1>
+    <p>One conversation is enough. We map where your hours go, build the systems that take that work off your plate, and automate them so it stays that way. Then you get back to running the business.</p>
+    <a class="ghost-btn" href="capabilities.html">See what we can build</a>
+  </div>
+</div>
+
+<script>
+(function () {
+  var config = { businessName: 'TBD.ai' };
+  document.getElementById('brandName').textContent = config.businessName;
+  document.title = 'Method — ' + config.businessName;
+
+  var v = document.getElementById('bgVideo');
+  if (!v) return;
+  v.muted = true; v.playsInline = true;
+
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    v.style.opacity = '1';
+    v.loop = true;
+    var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+    return;
+  }
+
+  var raf = null, fadingOut = false;
+  function fade(to, dur) {
+    if (raf) cancelAnimationFrame(raf);
+    var from = parseFloat(v.style.opacity) || 0;
+    var start = performance.now();
+    function step(now) {
+      var t = Math.min(1, (now - start) / dur);
+      v.style.opacity = String(from + (to - from) * t);
+      if (t < 1) raf = requestAnimationFrame(step);
+    }
+    raf = requestAnimationFrame(step);
+  }
+
+  v.addEventListener('playing', function () { if (!fadingOut) fade(1, 500); });
+  v.addEventListener('timeupdate', function () {
+    if (!fadingOut && v.duration && v.duration - v.currentTime <= 0.55) {
+      fadingOut = true; fade(0, 500);
+    }
+  });
+  v.addEventListener('ended', function () {
+    v.style.opacity = '0';
+    setTimeout(function () {
+      v.currentTime = 0;
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+      fadingOut = false; fade(1, 500);
+    }, 100);
+  });
+
+  var p0 = v.play(); if (p0 && p0.catch) p0.catch(function () {});
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>

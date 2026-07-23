@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TBD.ai — AI systems for Toronto businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600&family=Exo+2:wght@400;500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-heading: 'Orbitron', 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    --cyan: #46E0FF;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: var(--font-body); }
+  a { color: #000; text-decoration: none; }
+  a:hover { opacity: 0.6; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #e8e6e2;
+  }
+  .bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% center;
+    z-index: 0;
+  }
+
+  /* ---- Nav (shared) ---- */
+  .nav-shell {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 1024px;
+    z-index: 50;
+    pointer-events: none;
+  }
+  nav.pill {
+    pointer-events: auto;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 9999px;
+    background: rgba(8, 12, 20, 0.55);
+    border: 1px solid rgba(70, 224, 255, 0.28);
+    box-shadow: 0 0 28px rgba(70, 224, 255, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand .spark {
+    font-size: 20px; color: var(--cyan);
+    text-shadow: 0 0 10px rgba(70, 224, 255, 0.9);
+    user-select: none; line-height: 1;
+  }
+  .brand .name {
+    font-family: var(--font-heading);
+    font-size: 18px; color: #fff; letter-spacing: 0.1em;
+  }
+  .nav-links { display: flex; align-items: center; gap: 40px; }
+  .nav-links a {
+    font-size: 12px; color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    transition: color .2s, text-shadow .2s;
+  }
+  .nav-links a:hover {
+    color: #fff; text-shadow: 0 0 12px rgba(70, 224, 255, 0.8); opacity: 1;
+  }
+  .btn-get {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #0871E7, #00C6FF);
+    color: #fff; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 10px 26px; border-radius: 9999px;
+    box-shadow: 0 0 18px rgba(0, 198, 255, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  }
+  .btn-get .gloss {
+    position: absolute; width: 80%; height: 16px; left: 10%; top: 1px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55), transparent);
+    border-radius: 12px;
+  }
+  .btn-get .label { position: relative; }
+
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 40px;
+    overflow: hidden;
+  }
+  .hero-inner { max-width: 576px; position: relative; z-index: 10; }
+  .kicker {
+    pointer-events: none; user-select: none;
+    margin-bottom: 24px;
+    font-size: clamp(18px, 4vw, 26px);
+    line-height: 1.3; font-weight: 400; color: #000;
+  }
+  .typed {
+    color: #000; margin: 0 0 24px;
+    font-size: clamp(18px, 4vw, 26px);
+    line-height: 1.35; font-weight: 400;
+    min-height: 90px; max-width: 521px;
+    white-space: pre-line;
+  }
+  .caret {
+    display: inline-block; width: 2px; height: 1.1em;
+    background: #000; vertical-align: middle; margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+  .pills {
+    display: flex; flex-wrap: wrap; row-gap: 4px;
+    transition: opacity .4s ease, transform .4s ease;
+    opacity: 0; transform: translateY(8px);
+  }
+  .pills.show { opacity: 1; transform: translateY(0); }
+  .pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #fff; color: #000;
+    border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 9999px;
+    font-size: 15px; padding: 0.3em 20px; margin: 0 0.2em 0.4em;
+    white-space: nowrap; transition: background .2s, color .2s;
+  }
+  .pill:hover { background: #000; color: #fff; opacity: 1; }
+  .pill-copy {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: transparent; color: #fff;
+    border: 1px solid #fff; border-radius: 9999px;
+    font-size: 15px; padding: 0.3em 20px; margin: 0 0.2em 0.4em;
+    white-space: nowrap; cursor: pointer;
+    font-family: var(--font-body); transition: background .2s, color .2s;
+  }
+  .pill-copy:hover { background: #fff; color: #000; }
+  .pill-copy .email { text-decoration: underline; text-underline-offset: 1px; }
+  .copied-note { margin-top: 8px; font-size: 14px; color: #000; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caret { animation: none; }
+    .pills { transition: none; }
+  }
+</style>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="stage">
+  <video class="bg-video" id="bgVideo"
+    src="videos/home.mp4"
+    preload="auto" muted playsinline></video>
+
+  <div class="nav-shell">
+    <nav class="pill">
+      <div class="brand">
+        <span class="spark">&#10035;&#65038;</span>
+        <span class="name" id="brandName">TBD.ai</span>
+      </div>
+      <div class="nav-links">
+        <a href="capabilities.html">Capabilities</a>
+        <a href="method.html">Method</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <a class="btn-get" href="contact.html">
+        <span class="gloss"></span>
+        <span class="label">Get in touch</span>
+      </a>
+    </nav>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="kicker">Business stuck in the 90's?<br>Let us bring you into the future, today.</div>
+
+      <p class="typed"><span id="typedText"></span><span class="caret" id="caret" hidden></span></p>
+
+      <div class="pills" id="pills">
+        <a href="#websites" class="pill">Build me a website</a>
+        <a href="#crms" class="pill">Design a custom CRM</a>
+        <a href="#support" class="pill">Automate my support desk</a>
+        <a href="#decks" class="pill">Make my pitch deck</a>
+        <button type="button" class="pill-copy" id="copyBtn">
+          <span>Reach us: <span class="email" id="emailText">andrew@tbd.ai</span></span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="1" y="1" width="7" height="7" rx="1"></rect></svg>
+        </button>
+      </div>
+      <div class="copied-note" id="copiedNote" hidden>Copied to clipboard</div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  var config = {
+    businessName: 'TBD.ai',
+    contactEmail: 'andrew@tbd.ai',
+    scrubSensitivity: 0.8
+  };
+
+  document.getElementById('brandName').textContent = config.businessName;
+  document.getElementById('emailText').textContent = config.contactEmail;
+  document.title = config.businessName + ' — AI systems for Toronto businesses';
+
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Typewriter ----
+  var fullText = "Your business runs on systems. Most of them are ten years old.\n\n" +
+    "We build AI-powered websites, CRMs, and workflows for Toronto businesses that are " +
+    "done waiting for “someday.” Real automation, working in weeks, not another " +
+    "software subscription you’ll abandon by March.";
+
+  var typedEl = document.getElementById('typedText');
+  var caret = document.getElementById('caret');
+
+  if (reduceMotion) {
+    typedEl.textContent = fullText;
+  } else {
+    setTimeout(function () {
+      caret.hidden = false;
+      var i = 0;
+      var iv = setInterval(function () {
+        i++;
+        typedEl.textContent = fullText.slice(0, i);
+        if (i >= fullText.length) { clearInterval(iv); caret.hidden = true; }
+      }, 38);
+    }, 600);
+  }
+
+  // ---- Pills entrance ----
+  setTimeout(function () {
+    document.getElementById('pills').classList.add('show');
+  }, reduceMotion ? 0 : 400);
+
+  // ---- Copy email ----
+  var copyBtn = document.getElementById('copyBtn');
+  var copiedNote = document.getElementById('copiedNote');
+  copyBtn.addEventListener('click', function () {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(config.contactEmail).catch(function () {});
+    }
+    copiedNote.hidden = false;
+    setTimeout(function () { copiedNote.hidden = true; }, 1800);
+  });
+
+  // ---- Mouse-scrub video (drag horizontally to scrub through frames) ----
+  var v = document.getElementById('bgVideo');
+  if (v) {
+    v.muted = true;
+    v.playsInline = true;
+    if (!reduceMotion) {
+      var prevX = null, targetTime = 0, seeking = false;
+      v.addEventListener('seeked', function () {
+        if (Math.abs(v.currentTime - targetTime) > 0.01) { v.currentTime = targetTime; }
+        else { seeking = false; }
+      });
+      window.addEventListener('mousemove', function (e) {
+        if (!v.duration || isNaN(v.duration)) return;
+        if (prevX === null) { prevX = e.clientX; targetTime = v.currentTime; return; }
+        var delta = e.clientX - prevX;
+        prevX = e.clientX;
+        targetTime = Math.max(0, Math.min(v.duration,
+          targetTime + (delta / window.innerWidth) * config.scrubSensitivity * v.duration));
+        if (!seeking) { seeking = true; v.currentTime = targetTime; }
+      });
+    }
+  }
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>
